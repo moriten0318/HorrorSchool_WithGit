@@ -10,6 +10,9 @@ public class MoveEnemy : MonoBehaviour
         Chase
     };
 
+    [SerializeField] private float walkSpeed;    // 歩く速度（インスペクターで設定可能）
+    [SerializeField] private float chaseSpeed;   // 追跡する速度（インスペクターで設定可能）
+
     private NavMeshAgent agent; // NavMeshAgentの追加
     private Animator animator;
     private SetPosition setPosition;
@@ -22,6 +25,7 @@ public class MoveEnemy : MonoBehaviour
     void Start()
     {
         agent = GetComponent<NavMeshAgent>(); // NavMeshAgentの取得
+        agent.speed = walkSpeed; // 初期速度を歩く速度に設定
         animator = GetComponent<Animator>();
         setPosition = GetComponent<SetPosition>();
         setPosition.CreateRandomPosition();
@@ -44,6 +48,7 @@ public class MoveEnemy : MonoBehaviour
 
             case EnemyState.Chase:
                 agent.SetDestination(playerTransform.position);
+
                 break;
 
             case EnemyState.Wait:
@@ -67,6 +72,7 @@ public class MoveEnemy : MonoBehaviour
                 agent.SetDestination(setPosition.GetDestination());
                 animator.SetBool("IsWalking", true);
                 animator.SetBool("IsChasing", false);
+                agent.speed = walkSpeed; // 歩く速度に設定
                 break;
 
             case EnemyState.Chase:
@@ -74,6 +80,7 @@ public class MoveEnemy : MonoBehaviour
                 agent.SetDestination(playerTransform.position);
                 animator.SetBool("IsWalking", false);
                 animator.SetBool("IsChasing", true);
+                agent.speed = chaseSpeed;///走るスピードに変更
                 break;
 
             case EnemyState.Wait:
